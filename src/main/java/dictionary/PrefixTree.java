@@ -106,16 +106,24 @@ public class PrefixTree implements Dictionary {
 
      */
     private void add(String word, Node node) {
-        // Must be recursive
-        if (word.isEmpty()) {
-            // FILL IN CODE
+
+        // Base case
+        if (word.length() == 0) {
             // This is the node where this word "ends"
+            node.isWord = true;
             return;
         }
+
         int index = (int) word.charAt(0) - (int) 'a'; // index of the child that corresponds to the first letter in s
-        // FILL IN CODE
+
         // If this child is null, point it to a new Node
-        // Call add recursively (decide which word to pass, and in which subtree you want to insert it)
+        if (node.children[index] == null) {
+            node.children[index] = new Node();
+        }
+
+        // Recursive call to add on remaining part of word
+        add(word.substring(1), node.children[index]);
+
     }
 
 
@@ -131,11 +139,20 @@ public class PrefixTree implements Dictionary {
      * @return true if the word is in the dictionary, false otherwise
      */
     private boolean check(String word, Node node) {
-        int index;
-        // Must be recursive
-        // FILL IN CODE
+        // Base case - we have come to the end of the word
+        if (word.isEmpty()) {
+            return node.isWord; // return the boolean value of 'valid bit'
+        }
 
-        return false;
+        // Otherwise - get the index of the next character in the word
+        int index = (int) word.charAt(0) - (int) 'a';
+        // If the child node at the index is null, the word is not in the dictionary
+        if (node.children[index] == null) {
+            return false;
+        }
+
+        // Recursively call - check the remaining part of the word
+        return check(word.substring(1), node.children[index]);
     }
 
     /**
