@@ -77,8 +77,7 @@ public class PrefixTree implements Dictionary {
      */
     @Override
     public void delete(String word) {
-        // FILL IN CODE: call the private helper delete method. Which parameters would it take?
-
+        delete(word.toLowerCase(), root, 0);
     }
 
     /**
@@ -211,6 +210,65 @@ public class PrefixTree implements Dictionary {
     // FILL IN CODE: Add a private delete method.
     // Think of what parameters (if any) it needs to take in addition to word and node.
     // Note that deleting a node involves more than just setting isWord to false, you'd possibly need to remove some branches.
+
+    /**
+     * A private recursive method to delete a word from the prefix tree.
+     *
+     * @param word  word to delete
+     * @param node  root of the subtree
+     * @param depth how far we have recursed into tree
+     * @return true if the current node becomes a leaf after deleting its child
+     */
+    private boolean delete(String word, Node node, int depth) {
+
+        // Base case - null node
+        if (node == null) {
+            return false;
+        }
+
+        // Base case - empty word
+        if (depth == word.length()) {
+            // Check boolean flag and update it to false if necessary
+            if (node.isWord) {
+                node.isWord = false;
+
+                // Check if the node is a leaf node
+                boolean isLeaf = true;
+                for (int i = 0; i < 26; i++) {
+                    if (node.children[i] != null) {
+                        isLeaf = false; // Node has children, can't delete
+                        break;
+                    }
+                }
+                return isLeaf; // Node is a leaf, can delete
+            }
+
+            return false; // Word not in tree
+        }
+
+        // Recursive case
+        int index = word.charAt(depth) - 'a'; // Get index for next char
+        boolean isChildLeaf = delete(word, node.children[index], depth + 1); // Check if child becomes leaf
+
+        // We reach this point after base case in recursion is hit and we start returning back up
+        // Now dealing with what happens as we go back up the tree
+        if (isChildLeaf) {
+            node.children[index] = null; // Remove child if it's a leaf
+
+            // Check if current node became a leaf
+            boolean isLeaf = true;
+            for (int i = 0; i < 26; i++) {
+                if (node.children[i] != null) {
+                    isLeaf = false; // Node still has children
+                    break;
+                }
+            }
+
+            return isLeaf && !node.isWord; // Delete current node if it's a leaf and not a word
+        }
+
+        return false; // Node not deleted, still has children or is a word
+    }
 
 
     /**
