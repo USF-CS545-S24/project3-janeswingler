@@ -220,20 +220,46 @@ public class PrefixTree implements Dictionary {
      * @param node the root of the tree
      * @param numIndentations the number of indentations to print at the current level
      */
+    /**
+     * Returns a string representing a tree: uses indentations to show nodes at different levels
+     * Shows the letter corresponding to the incoming edge of the node.
+     * Adds * to the prefix of the node, if the valid bit is set to true
+     *
+     * @param node            the root of the tree
+     * @param numIndentations the number of indentations to print at the current level
+     */
     private String toString(Node node, int numIndentations) {
+
         StringBuilder sb = new StringBuilder();
+
+        // Base case
         if (node == null) {
             return sb.toString();
         }
-        // FILL IN CODE: Iterate over the children
+
+        // Recursive case - iterate through child nodes
         for (int i = 0; i < 26; i++) {
             if (node.children[i] != null) {
                 char ch = (char) ('a' + i); // character on the incoming edge of node.children[i]
+
                 // Print indentations
-                // Print the character
-                // Print * if isWord is true for the child at index i
-                // Append a new line character (you can use System.lineSeparator())
-                // Make a recursive call on the same method and append the result to sb
+                for (int j = 0; j < numIndentations; j++) {
+                    sb.append(" ");
+                }
+
+                // Print the char
+                sb.append(ch);
+
+                // Add '*' if this node marks the end of a valid word
+                if (node.children[i].isWord) {
+                    sb.append("*");
+                }
+
+                // Append new line char
+                sb.append(System.lineSeparator());
+
+                // Recursive call to process child node
+                sb.append(toString(node.children[i], numIndentations + 1));
             }
         }
         return sb.toString();
