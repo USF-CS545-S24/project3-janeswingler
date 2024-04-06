@@ -1,5 +1,9 @@
 package dictionary;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 /** PrefixTree class, implements Dictionary interface.
  *  Can be used as a spell checker. */
 public class PrefixTree implements Dictionary {
@@ -28,9 +32,15 @@ public class PrefixTree implements Dictionary {
      * @param filename the name of the file with words
      */
     public PrefixTree(String filename) {
-        // FILL IN CODE:
-        // Read each word from the file, add it to the tree
-
+        root = new Node();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("IO error.");
+        }
     }
 
     /** Adds a given word to the dictionary.
@@ -140,7 +150,7 @@ public class PrefixTree implements Dictionary {
      */
     private boolean check(String word, Node node) {
         // Base case - we have come to the end of the word
-        if (word.isEmpty()) {
+        if (word.length() == 0) {
             return node.isWord; // return the boolean value of 'valid bit'
         }
 
@@ -174,10 +184,28 @@ public class PrefixTree implements Dictionary {
      * @return true if there is at least one word in the dictionary that starts with this prefix, false otherwise
      */
     private boolean checkPrefix(String prefix, Node node) {
-        // FILL IN CODE:
-        // Must be recursive
 
-        return false;
+        // Base case - end of prefix reached
+        if (prefix.length() == 0) {
+            return true;
+        }
+
+        // Get index of next char
+        int index = (int) prefix.charAt(0) - (int) 'a';
+
+        // Check bounds
+        if (index < 0 || index > 26) {
+            return false;
+        }
+
+        // Base case - no matching child for the current char
+        if (node.children[index] == null) {
+            return false;
+        }
+
+        // Recursive call - proceed with next char in the prefix
+        return checkPrefix(prefix.substring(1), node.children[index]);
+
     }
 
     // FILL IN CODE: Add a private delete method.
