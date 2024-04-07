@@ -3,6 +3,7 @@ package dictionary;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /** PrefixTree class, implements Dictionary interface.
  *  Can be used as a spell checker. */
@@ -94,8 +95,7 @@ public class PrefixTree implements Dictionary {
     public String suggest(String word) {
         // Find a node with the longest common prefix (write a helper method)
        //  Find word(s) below the "longest common prefix" node (write another helper method)
-
-        return ""; // change
+        return suggest(word, root);
     }
 
     /** Return a string representation of the prefix tree.
@@ -322,4 +322,86 @@ public class PrefixTree implements Dictionary {
         }
         return sb.toString();
     }
+
+
+    /**
+     * Suggests a word from the tree with the longest common prefix.
+     *
+     * @param word The word to suggest.
+     * @param root The root node of the tree.
+     * @return The suggested word, or null if none found.
+     */
+    private String suggest(String word, Node root) {
+        StringBuilder prefixBuilder = new StringBuilder();
+        Node prefixNode = longestCommonPrefix(word, root, prefixBuilder, 0);
+
+        // If no common prefix, return null
+        if (prefixNode == null) {
+            return null;
+        }
+        // Find valid words starting from the prefix node
+        ArrayList<String> validWords = new ArrayList<>();
+        findValidWords(prefixNode, prefixBuilder, validWords);
+
+        if (validWords.size() == 0) {
+            return null;
+        } else {
+            return validWords.get(0);
+        }
+    }
+
+    /**
+     * Finds the node with the longest common prefix with the given word in the tree
+     *
+     * @param word Target word
+     * @param node Current node (start with root).
+     * @param prefixBuilder Builds the prefix as traversing.
+     * @param depth Current depth in tree.
+     * @return Node with longest common prefix, null if not found.
+     */
+    private Node longestCommonPrefix(String word, Node node, StringBuilder prefixBuilder, int depth) {
+        // Base case: null node or full depth reached
+        if (node == null || depth == word.length()) {
+            return node;
+        }
+
+        int index = word.charAt(depth) - 'a'; // Index for char at current depth
+
+        // Traverse deeper if child exists for character
+        if (node.children[index] != null) {
+            prefixBuilder.append(word.charAt(depth));
+            return longestCommonPrefix(word, node.children[index], prefixBuilder, depth + 1);
+        }
+
+        // Return node where path ends
+        return node;
+    }
+
+    /**
+     * Collects valid words starting from a node.
+     *
+     * @param node        The node to start from.
+     * @param currentWord Builds words during traversal.
+     * @param validWords  Stores found valid words.
+     */
+    private void findValidWords(Node node, StringBuilder currentWord, ArrayList<String> validWords) {
+        if (node == null) {
+            return;
+        }
+        //If the node is a word ensure it is stored first in valid words
+        if (node.isWord) {
+            validWords.add(currentWord.toString());
+        }
+
+        for (int i = 0; i < 26; i++) {
+            if (node.children[i] != null) {
+                char charToAdd = (char) (i + 'a');
+                currentWord.append(charToAdd);
+                findValidWords(node.children[i], currentWord, validWords);
+                currentWord.deleteCharAt(currentWord.length() - 1); // Backtrack
+            }
+        }
+    }
 }
+
+
