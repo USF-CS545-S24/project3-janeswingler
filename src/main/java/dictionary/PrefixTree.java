@@ -189,8 +189,7 @@ public class PrefixTree implements Dictionary {
             return true;
         }
 
-        // Get index of next char
-        int index = (int) prefix.charAt(0) - (int) 'a';
+        int index = (int) prefix.charAt(0) - (int) 'a'; // Get index of next char
 
         // Check bounds
         if (index < 0 || index > 26) {
@@ -305,16 +304,15 @@ public class PrefixTree implements Dictionary {
                     sb.append(" ");
                 }
 
-                // Print the char
-                sb.append(ch);
+                sb.append(ch); // Print the char
 
                 // Add '*' if this node marks the end of a valid word
                 if (node.children[i].isWord) {
                     sb.append("*");
                 }
 
-                // Append new line char
-                sb.append(System.lineSeparator());
+
+                sb.append(System.lineSeparator()); // Append new line char
 
                 // Recursive call to process child node
                 sb.append(toString(node.children[i], numIndentations + 1));

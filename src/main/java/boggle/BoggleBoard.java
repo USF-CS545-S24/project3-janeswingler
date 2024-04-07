@@ -2,6 +2,9 @@ package boggle;
 
 import dictionary.Dictionary;
 ;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +27,20 @@ public class BoggleBoard {
         board = new String[BOARD_WIDTH][BOARD_HEIGHT];
         visited = new boolean[BOARD_WIDTH][BOARD_HEIGHT];
         // FILL IN CODE: each line of the input file corresponds to one row in the boggle board
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            int row = 0;
+            while ((line = br.readLine()) != null && row < BOARD_HEIGHT) {
+                String[] letters = line.split("\\t");
+                for (int column = 0; column < letters.length; column++) {
+                    this.board[row][column] = letters[column];
+                }
+                row++;
+            }
+        } catch (IOException e) {
+            System.out.println("IO exception");
+        }
 
     }
 
