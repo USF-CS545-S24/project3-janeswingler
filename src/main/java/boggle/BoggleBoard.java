@@ -50,6 +50,14 @@ public class BoggleBoard {
      */
     public void printBoard() {
         // FILL IN CODE:
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+
+            for (int column = 0; column < BOARD_WIDTH; column++) {
+                System.out.print(board[row][column] + "\t");
+            }
+
+            System.out.println();
+        }
 
     }
 
@@ -76,13 +84,51 @@ public class BoggleBoard {
         // You are allowed to use a HashSet for this method.
         // FILL IN CODE:
         // Iterate over the board and call a recursive helper method
-
-
+        for (int i = 0; i < BOARD_WIDTH; i++) {
+            for (int j = 0; j < BOARD_HEIGHT; j++) {
+                search(i, j, "", words);
+            }
+        }
         return words;
+
     }
 
     // FILL IN CODE: add a recursive helper method that searches for valid words
     // Think of what parameters you need to pass apart from i, j of the board cell.
+    /**
+     * Recursive helper method to search for words starting at a given cell.
+     * @param i             row index
+     * @param j             column index
+     * @param currentWord   current word being formed
+     * @param words set     of found words
+     */
+    private void search(int i, int j, String currentWord, Set<String> words) {
+        // Check bounds and visited
+        if (i < 0 || i >= BOARD_WIDTH || j < 0 || j >= BOARD_HEIGHT || visited[i][j]) {
+            return;
+        }
+
+        // Append current letter and mark visited
+        currentWord += board[i][j];
+        visited[i][j] = true;
+
+        // Add word to set if it's valid (using dict)
+        if (dict.check(currentWord)) {
+            words.add(currentWord);
+        }
+
+        // Recurse for neighbors
+        for (int row = i - 1; row <= i + 1; row++) {
+            for (int column = j - 1; column <= j + 1; column++) {
+                if (row != i || column != j) { // Ensure we don't revisit the same cell
+                    search(row, column, currentWord, words);
+                }
+            }
+        }
+
+        // Unmark visited
+        visited[i][j] = false;
+    }
 
     /**
      * A method that can be called to let the user play a simplified
