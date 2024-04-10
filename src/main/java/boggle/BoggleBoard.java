@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 /** A class that stores the Boggle game board, and
@@ -146,7 +147,30 @@ public class BoggleBoard {
      *
      */
     public void play() {
-        // FILL IN CODE
 
+        printBoard();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please type valid words you can generate from this board, separated by space.");
+        String userInput = scanner.nextLine();
+        String[] userWords = userInput.split("\\s+");
+
+        Set<String> computerWords = findValidWords();
+
+        Set<String> inputtedWords = new HashSet<>();
+
+        for (String word : userWords) {
+            inputtedWords.add(word);
+        }
+
+        // Check if the user's list matches the computer's list
+        if (inputtedWords.equals(computerWords)) {
+            System.out.println("Great job!");
+        } else {
+            System.out.println("Your list of words is not as expected");
+            System.out.println("Computer generated: " + computerWords);
+        }
+
+        scanner.close();
     }
 }
