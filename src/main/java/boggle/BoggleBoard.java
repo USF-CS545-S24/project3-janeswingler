@@ -1,7 +1,6 @@
 package boggle;
 
 import dictionary.Dictionary;
-;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,10 +23,10 @@ public class BoggleBoard {
      * @param dict The dictionary to use for checking word validity
      */
     public BoggleBoard(String filename, Dictionary dict) {
+
         this.dict = dict;
         board = new String[BOARD_WIDTH][BOARD_HEIGHT];
         visited = new boolean[BOARD_WIDTH][BOARD_HEIGHT];
-        // FILL IN CODE: each line of the input file corresponds to one row in the boggle board
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -50,7 +49,6 @@ public class BoggleBoard {
      * The format must match the format of board1.txt etc.
      */
     public void printBoard() {
-        // FILL IN CODE:
         for (int row = 0; row < BOARD_HEIGHT; row++) {
 
             for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -61,7 +59,6 @@ public class BoggleBoard {
         }
 
     }
-
 
     /**
      * Finds valid words on the boggle board following the rules of the Boggle game:
@@ -82,9 +79,6 @@ public class BoggleBoard {
      */
     public Set<String> findValidWords() {
         Set<String> words = new HashSet<>();
-        // You are allowed to use a HashSet for this method.
-        // FILL IN CODE:
-        // Iterate over the board and call a recursive helper method
         for (int i = 0; i < BOARD_WIDTH; i++) {
             for (int j = 0; j < BOARD_HEIGHT; j++) {
                 search(i, j, "", words);
@@ -94,14 +88,12 @@ public class BoggleBoard {
 
     }
 
-    // FILL IN CODE: add a recursive helper method that searches for valid words
-    // Think of what parameters you need to pass apart from i, j of the board cell.
     /**
      * Recursive helper method to search for words starting at a given cell.
-     * @param i             row index
-     * @param j             column index
+     * @param i row index
+     * @param j column index
      * @param currentWord   current word being formed
-     * @param words set     of found words
+     * @param words         set of found words
      */
     private void search(int i, int j, String currentWord, Set<String> words) {
         // Check bounds and visited

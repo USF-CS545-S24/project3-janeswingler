@@ -93,8 +93,6 @@ public class PrefixTree implements Dictionary {
      */
     @Override
     public String suggest(String word) {
-        // Find a node with the longest common prefix (write a helper method)
-       //  Find word(s) below the "longest common prefix" node (write another helper method)
         return suggest(word, root);
     }
 
@@ -117,8 +115,7 @@ public class PrefixTree implements Dictionary {
     private void add(String word, Node node) {
 
         // Base case
-        if (word.length() == 0) {
-            // This is the node where this word "ends"
+        if (word.length() == 0) { // This is the node where this word "ends"
             node.isWord = true;
             return;
         }
@@ -160,7 +157,7 @@ public class PrefixTree implements Dictionary {
             return false;
         }
 
-        // Recursively call - check the remaining part of the word
+        // Recursive call - check the remaining part of the word
         return check(word.substring(1), node.children[index]);
     }
 
@@ -205,10 +202,6 @@ public class PrefixTree implements Dictionary {
         return checkPrefix(prefix.substring(1), node.children[index]);
 
     }
-
-    // FILL IN CODE: Add a private delete method.
-    // Think of what parameters (if any) it needs to take in addition to word and node.
-    // Note that deleting a node involves more than just setting isWord to false, you'd possibly need to remove some branches.
 
     /**
      * A private recursive method to delete a word from the prefix tree.
@@ -310,7 +303,6 @@ public class PrefixTree implements Dictionary {
                 if (node.children[i].isWord) {
                     sb.append("*");
                 }
-
 
                 sb.append(System.lineSeparator()); // Append new line char
 
